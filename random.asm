@@ -6,28 +6,37 @@ fmt : db  "a=%ld, rax=%ld", 10, 0
 section .text
 	global main
 
-main:   
-	mov edi, 2
-	call test1	
-	
-	push ebp
-
-	mov edx, [a]
-	add edx, 2
-	mov edi, fmt
-	mov edi, [a]
-	mov edx, eax
-	
-	pop ebp	
-	
-	mov eax, 0
-	;call printf
+main: ; two stacks from creation to end    
+	mov edx, 0xfff
+	push ecx
+	mov ecx, msg
+	mov ebx, 1
 	mov eax, 4
 	int 0x80
+	pop ecx
+	
+	push ecx
+	call icmnt
+	mov eax, edi 
+	mov edx, 0xffff
+	mov ecx, icmnt
+	mov eax, 4
+	mov ebx, 1
+	int 0x80
+	pop ecx
+
 	mov eax, 1
 	int 0x80
+	
+icmnt:
+	t db "t", 0xb
+	mov cx, 0
+	l1:
+		mov eax, 4
+		add cx, 1
+		inc cx
+	mov ax, [t]
 
-	ret
 test1:
 	mov eax, edi
 	add eax, 0xc
