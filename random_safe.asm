@@ -1,14 +1,9 @@
-	extern printf
-	section data
-	a: dq	5
-fmt : db  "a=%ld, rax=%ld", 10, 0
-
 section .text
 	global main
 
 main:
    mov ecx,10
-   mov eax, '1'
+   mov eax, '0'
 
 l1:   
    mov [num], eax
@@ -17,17 +12,23 @@ l1:
    push ecx
 	
    mov ecx, num        
-   mov edx, 1        
+   mov edx, 0xff        
    int 0x80
 	
    mov eax, [num]
    sub eax, '0'
-   inc eax
+   dec eax
    add eax, '0'
    pop ecx
    loop l1
 
+exit:
+	mov eax, 1
+	int 0x80
+	pop ebp
+	ret
+
 section .data
-	msg db "hello", 0xa
+	msg db "bruh", 0x1
 section .bss
 	num resb 1
